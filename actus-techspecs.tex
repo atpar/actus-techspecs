@@ -2774,6 +2774,104 @@ with\par
 \end{functions}
 
 
+%%%%%%%%%%%%%%%%%%%% subsection: certf %%%%%%%%%%%%%%%%%%%%
+
+\subsection{CERTF: Certificate}\label{sec:certf}
+
+
+% ---------------------- table: certf schedule ----------------------
+\begin{schedule}{CERTF}
+	AD & & Same as PAM \\
+	\hline
+	ID & $t^{ID} = \attr{ID}$ & \\
+	\hline 
+	MD & $t^{MD} = \begin{cases}
+		\undef & \text{if}\quad \attr{MD}=\undef \\
+		\attr{MD} & \text{else} \end{cases}$ &  \\
+	\hline
+	RD & $t^{RD} = \begin{cases}
+		\undef & \text{if}\quad \attr{RDANX}=\undef \wedge \attr{RDCL}=\undef \wedge \attr{MD}=\undef \\
+		\sdl{s}{\attr{RDCL}}{\attr{MD}} & \text{else} \end{cases}$
+	   & where\par
+		$s=\begin{cases} \attr{RDANX} & \text{if}\quad \attr{RDANX}\neq\undef \\
+				\attr{ID}+\attr{RDCL} & \text{else} \end{cases}$\\ &  \\
+	\hline
+	XO & $t^{XO}=\obs{ev}{\attr{CID},\attr{XO}}{t}$ & \\
+	\hline
+	TD & $t^{TD}=\obs{ev}{\attr{CID},\attr{TD}}{t}$ & \\
+	\hline
+	XD & $t^{XD} = \begin{cases} \undef & \text{if}\quad t^{RD} = \undef\\
+				t^{RD} + \attr{XP} & \text{else} \end{cases}$ &  \\
+	\hline
+	STD & $t^{STD} = \begin{cases} \undef & \text{if}\quad t^{RD} = \undef\\
+		t^{RD} + \attr{STP} & \text{else} \end{cases}$ &  \\
+	\hline
+	CE & & Same as PAM \\
+\end{schedule}
+
+
+% ---------------------- table: certf states ----------------------
+\begin{states}{CERTF}
+	$\svar{Xo}{}$ & $\svar{Xo}{t_0} = \attr{XO}$ & \\
+	\hline	
+	$\svar{Xq}{}$ & $\svar{Xq}{t_0} = \attr{XQ}$ & \\
+	\hline
+	$\svar{Xa}{}$ & $\svar{Xa}{t_0} = \attr{XA}$ & \\
+	\hline
+	$\svar{Td}{}$ & $\svar{Td}{t_0} = \attr{TD}$ & \\
+	\hline
+	$\svar{Prf}{}$ & & Same as PAM \\
+	\hline
+	$\svar{Sd}{}$ & & Same as PAM \\
+\end{states}
+
+
+% ---------------------- table: certf functions ----------------------
+\begin{functions}{CERTF}
+	AD & \pof{AD}{PAM} & $\svar{Sd}{t^+} = t$ \\
+	\hline
+	ID & $X_{\attr{CUR}}^{\attr{CURS}}(t)(-1)\sgn\attr{QT}\times\attr{NP}$ & {$\begin{aligned}
+		\svar{Qt}{t^+} &= \attr{QT}  \\
+		\svar{Sd}{t^+} &= t \end{aligned}$} \\
+	\hline
+	MD & 0.0 & {$\begin{aligned}
+		\svar{Xo}{t^+} &= \svar{Qt}{t}  \\
+		\svar{Md}{t^+} &= t \\
+		\svar{Sd}{t^+} &= t \end{aligned}$} \\
+	\hline
+	RD & 0.0 & {$\begin{aligned}
+					\svar{Xa}{t^+} &= f^{RA}(\obs{rf}{\attr{CTST}_{Underlying}^{MOC}}{t},t)  \\
+					\svar{Sd}{t^+} &= t \end{aligned}$} \par 
+					with $f^{RA}$ the contract Redemption Amount formula. \\
+	\hline
+	XO & 0.0 & {$\begin{aligned}
+		\svar{Xo}{t^+} &= min(\svar{Qt}{t},\svar{Xo}{t}+ev^{QT})  \\
+		\svar{Sd}{t^+} &= t \end{aligned}$} \par
+		with $ev^{QT}$ the exercised quantity as per XO event. \\
+	\hline
+	TD & 0.0 & {$\begin{aligned}
+		\svar{Xo}{t^+} &= \svar{Qt}{t}  \\
+		\svar{Td}{t^+} &= t \\
+		\svar{Sd}{t^+} &= t \end{aligned}$} \\
+	\hline
+	XD & 0.0 & {$\begin{aligned}
+		\svar{Xq}{t^+} &= \svar{Xo}{t}  \\
+		\svar{Xo}{t^+} &= 0  \\
+		\svar{Sd}{t^+} &= t \end{aligned}$} \\
+	\hline
+	STD & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Xq}{t}\svar{Xa}{t}$ & {$\begin{aligned}
+		\svar{Qt}{t^+} &= \svar{Qt}{t}-\svar{Xq}{t} \\
+		\svar{Xq}{t^+} &= 0.0 \\		
+		\svar{Xa}{t^+} &= 0.0 \\
+		\svar{Prf}{t^+} &=\begin{cases} \svar{Prf}{t} & \text{if } \svar{Md}{t} = \undef \wedge \svar{Td}{t} = \undef \\
+			\text{matured} & \text{else if } \svar{Md}{t} \neq \undef \\
+			\text{terminated} & \text{else} \end{cases}	\\		
+		\svar{Sd}{t^+} &= t \end{aligned}$}	\\
+	\hline
+	CE & \pof{CE}{PAM} & \stf{AD}{OPTNS} \\
+\end{functions}
+
+
 %%%%%%%%%%%%%%%%%%%% section: bibliography %%%%%%%%%%%%%%%%%%%%
 
 \bibliography{bibliography}
