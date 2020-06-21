@@ -2784,6 +2784,10 @@ with\par
 	AD & & Same as PAM \\
 	\hline
 	ID & $t^{ID} = \attr{ID}$ & \\
+	\hline
+	IED & $t^{IED} = \begin{cases}
+		\undef & \text{if}\quad \attr{IED}=\undef \\
+		\attr{IED} & \text{else} \end{cases}$ &  \\
 	\hline 
 	MD & $t^{MD} = \begin{cases}
 		\undef & \text{if}\quad \attr{MD}=\undef \\
@@ -2830,9 +2834,11 @@ with\par
 \begin{functions}{CERTF}
 	AD & \pof{AD}{PAM} & $\svar{Sd}{t^+} = t$ \\
 	\hline
-	ID & $X_{\attr{CUR}}^{\attr{CURS}}(t)(-1)\sgn\attr{QT}\times\attr{IPR}$ & {$\begin{aligned}
+	ID & 0.0 & {$\begin{aligned}
 		\svar{Qt}{t^+} &= \attr{QT}  \\
 		\svar{Sd}{t^+} &= t \end{aligned}$} \\
+	\hline
+	IED & $\sgn\svar{Qt}{t}\attr{IP}$ & $\svar{Sd}{t^+} = t$ \\
 	\hline
 	MD & 0.0 & {$\begin{aligned}
 		\svar{Xo}{t^+} &= \svar{Qt}{t}  \\
@@ -2840,9 +2846,14 @@ with\par
 		\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
 	RD & 0.0 & {$\begin{aligned}
-					\svar{Xa}{t^+} &= f^{RA}(\obs{rf}{\attr{CTST}_{Underlying}^{MOC}}{t},t)  \\
+					\svar{Xa}{t^+} &= f^{RA}(\mathcal{A},\mathcal{S}_t,t)  \\
 					\svar{Sd}{t^+} &= t \end{aligned}$} \par 
-					with $f^{RA}$ the contract Redemption Amount formula. \\
+					with $f^{RA}$ the contract Redemption Amount formula, 
+					$\mathcal{A}$ the attributes and $\mathcal{S}_t$ state as per current time $t$.  \par
+					E.g.\par
+					$f^{RA}=\frac{\obs{rf}{\attr{CTST}_{Underlying}^{MOC}}{t}}{\obs{rf}{\attr{CTST}_{Underlying}^{MOC}}{\attr{RDANX}}}\attr{NP}\svar{Mrf}{t}\svar{Adf}{t}$ \par
+					
+					 \\
 	\hline
 	XO & 0.0 & {$\begin{aligned}
 		\svar{Xo}{t^+} &= min(\svar{Qt}{t},\svar{Xo}{t}+ev^{QT})  \\
