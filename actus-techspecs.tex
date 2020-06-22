@@ -2788,27 +2788,44 @@ with\par
 	IED & $t^{IED} = \begin{cases}
 		\undef & \text{if}\quad \attr{IED}=\undef \\
 		\attr{IED} & \text{else} \end{cases}$ &  \\
+	\hline
+	CFD & $t^{CFD} = \begin{cases}
+		\undef & \text{if}\quad \attr{CPANX}=\undef \wedge \attr{CPCL}=\undef \\
+		\sdl{s}{\attr{CPCL}}{T} & \text{else} \end{cases}$
+		& where\par
+		$s=\begin{cases} \attr{CPANX} & \text{if}\quad \attr{CPANX}\neq\undef \\
+				\attr{ID}+\attr{CPCL} & \text{else} \end{cases}$\par
+		and\par
+		$T=\begin{cases} \attr{MD} & \text{if}\quad \attr{MD}\neq\undef \\
+			\tmax & \text{else} \end{cases}$ \\
+	\hline
+	CPD & $t^{CPD} = \begin{cases} \undef & \text{if}\quad t^{CFD} = \undef\\
+		t^{CFD} + \attr{STP} & \text{else} \end{cases}$ &  \\
+	\hline
+	RFD & $t^{RFD} = \begin{cases}
+		\undef & \text{if}\quad \attr{RDANX}=\undef \wedge \attr{RDCL}=\undef \\
+		\sdl{s}{\attr{RDCL}}{T} & \text{else} \end{cases}$
+	   & where\par
+		$s=\begin{cases} \attr{RDANX} & \text{if}\quad \attr{RDANX}\neq\undef \\
+				\attr{ID}+\attr{RDCL} & \text{else} \end{cases}$
+		and\par
+		$T=\begin{cases} \attr{MD} & \text{if}\quad \attr{MD}\neq\undef \\
+			\tmax & \text{else} \end{cases}$ \\
+	\hline
+	XO & $t^{XO}=\obs{ev}{\attr{CID},\attr{XO}}{t}$ & \\
+	\hline
+	XD & $t^{XD} = \begin{cases} \undef & \text{if}\quad t^{RFD} = \undef \\
+				t^{RFD}\setminus\attr{MD} + \attr{XP} & \text{else if}\quad \attr{MD}\neq\undef \\
+				t^{RFD} + \attr{XP} & \text{else} \end{cases}$ &  \\
+	\hline
+	RPD & $t^{RPD} = \begin{cases} \undef & \text{if}\quad t^{RFD} = \undef\\
+		t^{RFD} + \attr{STP} & \text{else} \end{cases}$ &  \\
+	\hline
+	TD & $\obs{ev}{i,\attr{TD}}{t_0}$ &  \\
 	\hline 
 	MD & $t^{MD} = \begin{cases}
 		\undef & \text{if}\quad \attr{MD}=\undef \\
 		\attr{MD} & \text{else} \end{cases}$ &  \\
-	\hline
-	RD & $t^{RD} = \begin{cases}
-		\undef & \text{if}\quad \attr{RDANX}=\undef \wedge \attr{RDCL}=\undef \wedge \attr{MD}=\undef \\
-		\sdl{s}{\attr{RDCL}}{\attr{MD}} & \text{else} \end{cases}$
-	   & where\par
-		$s=\begin{cases} \attr{RDANX} & \text{if}\quad \attr{RDANX}\neq\undef \\
-				\attr{ID}+\attr{RDCL} & \text{else} \end{cases}$\\ &  \\
-	\hline
-	XO & $t^{XO}=\obs{ev}{\attr{CID},\attr{XO}}{t}$ & \\
-	\hline
-	TD & $t^{TD}=\obs{ev}{\attr{CID},\attr{TD}}{t}$ & \\
-	\hline
-	XD & $t^{XD} = \begin{cases} \undef & \text{if}\quad t^{RD} = \undef\\
-				t^{RD} + \attr{XP} & \text{else} \end{cases}$ &  \\
-	\hline
-	STD & $t^{STD} = \begin{cases} \undef & \text{if}\quad t^{RD} = \undef\\
-		t^{RD} + \attr{STP} & \text{else} \end{cases}$ &  \\
 	\hline
 	CE & & Same as PAM \\
 \end{schedule}
@@ -2816,13 +2833,35 @@ with\par
 
 % ---------------------- table: certf states ----------------------
 \begin{states}{CERTF}
-	$\svar{Xo}{}$ & $\svar{Xo}{t_0} = \attr{XO}$ & \\
+	$\svar{Qt}{}$ & $\svar{Qt}{t_0} = \attr{QT}$ & \\
 	\hline	
-	$\svar{Xq}{}$ & $\svar{Xq}{t_0} = \attr{XQ}$ & \\
+	$\svar{Xo}{}$ & $\svar{Xo}{t_0} = \begin{cases}
+		\attr{XO} & \text{if}\quad \attr{XO}\neq\undef \\
+		\attr{0} & \text{else} \end{cases}$ & \\
+	\hline	
+	$\svar{Xq}{}$ & $\svar{Xq}{t_0} = \begin{cases}
+		\attr{XQ} & \text{if}\quad \attr{XQ}\neq\undef \\
+		\attr{0} & \text{else} \end{cases}$ & \\
 	\hline
-	$\svar{Xa}{}$ & $\svar{Xa}{t_0} = \attr{XA}$ & \\
+	$\svar{Xa}{}$ & $\svar{Xa}{t_0} = \begin{cases}
+		\attr{XA} & \text{if}\quad \attr{XA}\neq\undef \\
+		\attr{0} & \text{else} \end{cases}$ & \\
 	\hline
-	$\svar{Td}{}$ & $\svar{Td}{t_0} = \attr{TD}$ & \\
+	$\svar{Mrf}{}$ & $\svar{Mrf}{t_0} = \begin{cases}
+		\attr{MRF} & \text{if}\quad \attr{MRF}\neq\undef \\
+		\attr{1.0} & \text{else} \end{cases}$ & \\
+	\hline	
+	$\svar{Adf}{}$ & $\svar{Adf}{t_0} = \begin{cases}
+		\attr{ADF} & \text{if}\quad \attr{ADF}\neq\undef \\
+		\attr{1.0} & \text{else} \end{cases}$ & \\
+	\hline	
+	$\svar{Lcd}{}$ & $\svar{Lcd}{t_0} = \begin{cases}
+		\attr{LCD} & \text{if}\quad \attr{LCD}\neq\undef \\
+		\attr{ID} & \text{else} \end{cases}$ & \\
+	\hline	
+	$\svar{Caf}{}$ & $\svar{Caf}{t_0} = \begin{cases}
+		\attr{CAF} & \text{if}\quad \attr{CAF}\neq\undef \\
+		\attr{0.0} & \text{else} \end{cases}$ & \\
 	\hline
 	$\svar{Prf}{}$ & & Same as PAM \\
 	\hline
@@ -2838,20 +2877,29 @@ with\par
 		\svar{Qt}{t^+} &= \attr{QT}  \\
 		\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
-	IED & $\sgn\svar{Qt}{t}\attr{IP}$ & $\svar{Sd}{t^+} = t$ \\
+	IED & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Qt}{t}\attr{IPR}$ & $\svar{Sd}{t^+} = t$ \\
 	\hline
-	MD & 0.0 & {$\begin{aligned}
-		\svar{Xo}{t^+} &= \svar{Qt}{t}  \\
-		\svar{Md}{t^+} &= t \\
+	CFD & 0.0 & {$\begin{aligned}
+					\svar{Caf}{t^+} &= f^{CP}()  \\
+					\svar{Lcd}{t^+} &= t  \\
+					\svar{Sd}{t^+} &= t \end{aligned}$} \par 
+					with Coupon Amount formula\par
+					$f^{CP} = \begin{cases}
+						\yfr{\svar{Lcd}{t}}{t}\attr{NPR}\times\attr{CPRT} & \text{if}\quad \attr{CPTP}='FIX' \\
+						\obs{rf}{\attr{CID}}{t}\yfr{\svar{Lcd}{t}}{t}\attr{NPR}\times\attr{CPRT} & \text{if}\quad \attr{CPTP}='FCN' \\
+						\obs{rf}{\attr{concat(CID,'-',CPFX)}}{t} & \text{else} \end{cases}$
+					 \\
+	\hline
+	CPD & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Qt}{t}\svar{Caf}{t}$ &  {$\begin{aligned}
+		\svar{Caf}{t^+} &= 0.0 \\
 		\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
-	RD & 0.0 & {$\begin{aligned}
-					\svar{Xa}{t^+} &= f^{RA}(\mathcal{A},\mathcal{S}_t,t)  \\
+	RFD & 0.0 & {$\begin{aligned}
+					\svar{Xa}{t^+} &= f^{RA}()  \\
 					\svar{Sd}{t^+} &= t \end{aligned}$} \par 
 					with $f^{RA}$ the contract Redemption Amount formula, 
-					$\mathcal{A}$ the attributes and $\mathcal{S}_t$ state as per current time $t$.  \par
-					E.g.\par
-					$f^{RA}=\frac{\obs{rf}{\attr{CTST}_{Underlying}^{MOC}}{t}}{\obs{rf}{\attr{CTST}_{Underlying}^{MOC}}{\attr{RDANX}}}\attr{NP}\svar{Mrf}{t}\svar{Adf}{t}$ \par
+					e.g.\par
+					$f^{RA}=\frac{\obs{rf}{\attr{CTST}_{Underlying}^{MOC}}{t}}{\obs{rf}{\attr{CTST}_{Underlying}^{MOC}}{\attr{RDANX}}}\attr{NPR}\svar{Mrf}{t}\svar{Adf}{t}$ \par
 					
 					 \\
 	\hline
@@ -2860,17 +2908,12 @@ with\par
 		\svar{Sd}{t^+} &= t \end{aligned}$} \par
 		with $ev^{QT}$ the exercised quantity as per XO event. \\
 	\hline
-	TD & 0.0 & {$\begin{aligned}
-		\svar{Xo}{t^+} &= \svar{Qt}{t}  \\
-		\svar{Td}{t^+} &= t \\
-		\svar{Sd}{t^+} &= t \end{aligned}$} \\
-	\hline
 	XD & 0.0 & {$\begin{aligned}
 		\svar{Xq}{t^+} &= \svar{Xo}{t}  \\
 		\svar{Xo}{t^+} &= 0  \\
 		\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
-	STD & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Xq}{t}\svar{Xa}{t}$ & {$\begin{aligned}
+	RPD & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Xq}{t}\svar{Xa}{t}$ & {$\begin{aligned}
 		\svar{Qt}{t^+} &= \svar{Qt}{t}-\svar{Xq}{t} \\
 		\svar{Xq}{t^+} &= 0.0 \\		
 		\svar{Xa}{t^+} &= 0.0 \\
@@ -2878,6 +2921,16 @@ with\par
 			\text{matured} & \text{else if } \svar{Md}{t} \neq \undef \\
 			\text{terminated} & \text{else} \end{cases}	\\		
 		\svar{Sd}{t^+} &= t \end{aligned}$}	\\
+	\hline
+	TD & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Qt}{t}\svar{Xa}{t}$ & {$\begin{aligned}
+		\svar{Qt}{t^+} &= 0  \\
+		\svar{Td}{t^+} &= t \\
+		\svar{Sd}{t^+} &= t \end{aligned}$} \\
+	\hline
+	MD & 0.0 & {$\begin{aligned}
+		\svar{Xq}{t^+} &= \svar{Qt}{t}  \\
+		\svar{Md}{t^+} &= t \\
+		\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
 	CE & \pof{CE}{PAM} & \stf{AD}{OPTNS} \\
 \end{functions}
