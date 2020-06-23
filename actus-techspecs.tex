@@ -636,7 +636,7 @@ with $f(t)=\obs{rf}{\attr{concat(CUR,'/',CURS)}}{t}$.
 
 The payoff of \textit{Combined Contracts}, see the taxonomy, is derived from certain quantities of child contracts (also called \textit{underlying instruments} or simply \textit{underlyers}). In general, such child contracts can be any ACTUS contract - Basic or Combined - as well as any number of contracts - a single contract or a set of contracts. Indeed, in reality this is what Option, Swap, Swaption, but also any kind of Asset/Mortgage/etc. backed securities represent; \textit{a hierarchical composition of different contracts linked by means of functional reationships}. This compositional approach provides maximum flexibility and, hence, allows capturing any real world use case. We here refer to a \textit{referenced} (i.e. of lower hierarchical level) contract as a \textit{child contract} and to a referencing (i.e. of higher hierarchical level) contract as a \textit{parent contract}.\\
 
-The ACTUS dictionary defines attribute $\attr{CTST}$ which captures the child contract(s) as part of the parent contract's set of attributes. Thereby, attribute $\attr{CTST}$ is of type \verb'ContractReference[]' with \verb'ContractReference' a reference to a child contract (in JSON notation)
+The ACTUS dictionary defines attribute $\attr{CTS}$ which captures the child contract(s) as part of the parent contract's set of attributes. Thereby, attribute $\attr{CTS}$ is of type \verb'ContractReference[]' with \verb'ContractReference' a reference to a child contract (in JSON notation)
 
 \begin{verbatim}
 {
@@ -648,18 +648,18 @@ The ACTUS dictionary defines attribute $\attr{CTST}$ which captures the child co
 
 Consult the dictionary for more information (cf. \url{https://github.com/actusfrf/actus-dictionary/blob/6e84435c70e1325e114c931badaa7e80b01a9a0d/actus-dictionary.json#L776}.
 
-We will use the following notation to query reference objects from the $\attr{CTST}$ attribute
+We will use the following notation to query reference objects from the $\attr{CTS}$ attribute
 
 \[
-	\attr{CTST}_{role}^{type}(i)
+	\attr{CTS}_{role}^{type}(i)
 \]
 
-where $role$ and $type$ filter the reference objects in $\attr{CTST}$ according to the respective values of fields \verb'type' and \verb'role'. For brevity, we will omit the index parameter $i$ which indicates that we address the first (and usually only) reference object queried.
+where $role$ and $type$ filter the reference objects in $\attr{CTS}$ according to the respective values of fields \verb'type' and \verb'role'. For brevity, we will omit the index parameter $i$ which indicates that we address the first (and usually only) reference object queried.
 
-\begin{example}[Underlying MarketObject-reference] The MarketObject reference of a simple Underlying e.g. to an Option contract is referenced as $\attr{CTST}_{Underlying}^{MarketObjectIdentifier}(1)$ or, in short form, as $\attr{CTST}_{Underlying}^{MarketObjectIdentifier}$.
+\begin{example}[Underlying MarketObject-reference] The MarketObject reference of a simple Underlying e.g. to an Option contract is referenced as $\attr{CTS}_{Underlying}^{MarketObjectIdentifier}(1)$ or, in short form, as $\attr{CTS}_{Underlying}^{MarketObjectIdentifier}$.
 \end{example}
 
-\begin{example}[FirstLeg Contract-reference] The Contract object representing the first leg e.g. to a Swaps contract is referenced as $\attr{CTST}_{FirstLeg}^{Contract}(1)$ or, in short form, as $\attr{CTST}_{FirstLeg}^{Contract}$.
+\begin{example}[FirstLeg Contract-reference] The Contract object representing the first leg e.g. to a Swaps contract is referenced as $\attr{CTS}_{FirstLeg}^{Contract}(1)$ or, in short form, as $\attr{CTS}_{FirstLeg}^{Contract}$.
 \end{example}
 
 
@@ -743,13 +743,13 @@ The parameters to the Child Contract Observer interface are as follows:
 
 Note that the observer interface only defines the structure of an actual observer function but not the actual implementation. Thus, the interface allows for user-defined implementations of observer functions allowing e.g. for using arbitrary data structures.
 
-\begin{example}['ev'-Observer] The future events, w.r.t. time $t$, of the \textit{first leg} (i.e. child contract with \verb'Role'=$\texttt{FirstLeg}$) of a SWAPS contract with $\attr{CNTRL}=PFL$ (i.e. \textit{pay first leg}) can be evaluated as $\cldev{\attr{CTST}_{FirstLeg}^{Contract}}{t}{\attr{CNTRL}=RPL}$.
+\begin{example}['ev'-Observer] The future events, w.r.t. time $t$, of the \textit{first leg} (i.e. child contract with \verb'Role'=$\texttt{FirstLeg}$) of a SWAPS contract with $\attr{CNTRL}=PFL$ (i.e. \textit{pay first leg}) can be evaluated as $\cldev{\attr{CTS}_{FirstLeg}^{Contract}}{t}{\attr{CNTRL}=RPL}$.
 \end{example}
 
-\begin{example}['sv'-Observer] The current state, w.r.t. time $t$, of state variable $\svar{Nt}{}$ of the \textit{first leg} (i.e. child contract with \verb'Role'=$\texttt{FirstLeg}$) of a SWAPS contract with \attr{CNTRL}=RFL (i.e. \textit{receive first leg}) can be evaluated as $\cldsv{\attr{CTST}_{FirstLeg}^{Contract}}{t}{Nt}{\attr{CNTRL}=RPA}$.
+\begin{example}['sv'-Observer] The current state, w.r.t. time $t$, of state variable $\svar{Nt}{}$ of the \textit{first leg} (i.e. child contract with \verb'Role'=$\texttt{FirstLeg}$) of a SWAPS contract with \attr{CNTRL}=RFL (i.e. \textit{receive first leg}) can be evaluated as $\cldsv{\attr{CTS}_{FirstLeg}^{Contract}}{t}{Nt}{\attr{CNTRL}=RPA}$.
 \end{example}
 
-\begin{example}['ca'-Observer] The contract attribute \attr{MOC} of the child contract \textit{Child} (i.e. child contract with \verb'Role'=$\texttt{Underlying}$) of an OPTNS contract can be evaluated as $\cldca{\attr{CTST}_{Underlying}^{Contract}}{\attr{MOC}}$.
+\begin{example}['ca'-Observer] The contract attribute \attr{MOC} of the child contract \textit{Child} (i.e. child contract with \verb'Role'=$\texttt{Underlying}$) of an OPTNS contract can be evaluated as $\cldca{\attr{CTS}_{Underlying}^{Contract}}{\attr{MOC}}$.
 \end{example}
 
 For brevity we will omit the $x$ and $a$ function arguments wherever this does not lead to confusion.
@@ -2254,8 +2254,8 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 	where for any two events $x_t^k\in\{e_t^{k,1}\}$, $y_s^l\in\{e_s^{l,2}\}$ we have $x_t^k=y_s^l \iff t=s \land k=l$, $\triangle$ is the \textit{distinct union}-operator, and $x_t^k+y_s^l=z_\tau^m$ with $\tau=t=s$, $m=k=l\in\{\text{IED,IP,PR}\}$ indicates that any two congruent events of type IED, IP, or PR are \textit{merged} into a new \textit{aggregate} event (see payoff and state transition function below).
 		& with\par
 			{$\begin{aligned}
-				\{e_t^{k,1}\} &= \cldev{\attr{CTST}_{FirstLeg}^{Contract}}{t_0}{\attr{CNTRL}=r^{(1)}} \\
-				\{e_s^{l,2}\} &= \cldev{\attr{CTST}_{SecondLeg}^{Contract}}{t_0}{\attr{CNTRL}=r^{(2)}} \\
+				\{e_t^{k,1}\} &= \cldev{\attr{CTS}_{FirstLeg}^{Contract}}{t_0}{\attr{CNTRL}=r^{(1)}} \\
+				\{e_s^{l,2}\} &= \cldev{\attr{CTS}_{SecondLeg}^{Contract}}{t_0}{\attr{CNTRL}=r^{(2)}} \\
 				r^{(1)} &= \begin{cases} RPA & \text{if}\quad \attr{CNTRL}=RFL \\
 					RPL & \text{else} \end{cases} \\
 				r^{(2)} &= \begin{cases} RPL & \text{if}\quad \attr{CNTRL}=RFL \\
@@ -2268,9 +2268,9 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 
 % ---------------------- table: swaps states ----------------------
 \begin{states}{SWAPS}
-	$\svar{Md}{}$ & $\svar{Md}{t_0}=\max(\cldsvs{\attr{CTST}_{FirstLeg}^{Contract}}{t_0}{Tmd}, \cldsvs{\attr{CTST}_{SecondLeg}^{Contract}}{t_0}{Tmd})$ & \\
+	$\svar{Md}{}$ & $\svar{Md}{t_0}=\max(\cldsvs{\attr{CTS}_{FirstLeg}^{Contract}}{t_0}{Tmd}, \cldsvs{\attr{CTS}_{SecondLeg}^{Contract}}{t_0}{Tmd})$ & \\
 	\hline
-  	$\svar{Ipac}{}$ & $\svar{Ipac}{t_0} = \cldsv{\attr{CTST}_{FirstLeg}^{Contract}}{t_0}{Ipac}{\attr{CNTRL}=r^{(1)}} + \cldsv{\attr{CTST}_{SecondLeg}^{Contract}}{t_0}{Ipac}{\attr{CNTRL}=r^{(2)}}$
+  	$\svar{Ipac}{}$ & $\svar{Ipac}{t_0} = \cldsv{\attr{CTS}_{FirstLeg}^{Contract}}{t_0}{Ipac}{\attr{CNTRL}=r^{(1)}} + \cldsv{\attr{CTS}_{SecondLeg}^{Contract}}{t_0}{Ipac}{\attr{CNTRL}=r^{(2)}}$
 			& with\par
 			{$\begin{aligned}
 				r^{(1)} &= \begin{cases} RPA & \text{if}\quad \attr{CNTRL}=RFL \\
@@ -2288,30 +2288,30 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 % ---------------------- table: swaps functions ----------------------
 \begin{functions}{SWAPS}
 	AD & \pof{AD}{PAM} & {$\begin{aligned}
-				\svar{Ipac}{t^+} &= \cldsv{\attr{CTST}_{FirstLeg}^{Contract}}{t}{Ipac}{\attr{CNTRL}=r^{(1)}} \\
-						&+ \cldsv{\attr{CTST}_{SecondLeg}^{Contract}}{t}{Ipac}{\attr{CNTRL}=r^{(2)}} \\
+				\svar{Ipac}{t^+} &= \cldsv{\attr{CTS}_{FirstLeg}^{Contract}}{t}{Ipac}{\attr{CNTRL}=r^{(1)}} \\
+						&+ \cldsv{\attr{CTS}_{SecondLeg}^{Contract}}{t}{Ipac}{\attr{CNTRL}=r^{(2)}} \\
 				\svar{Feac}{t^+} &= \begin{cases} \svar{Feac}{t^-} + \yfr{\svar{Sd}{t^-}}{t}\svar{Nt}{t^-}\attr{FER} & \text{if} \quad \attr{FEB}=\text{'N'} \\
 					\frac{\yfr{t^-}{t}}{\yfr{t^-}{t^+}}\attr{FER} & \text{else} \end{cases} \\
 				\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
 	PRD & $X_{\attr{CUR}}^{\attr{CURS}}(t) ( (-1)\attr{PPRD}$ \par
-				 $\qquad + \cldsv{\attr{CTST}_{FirstLeg}^{Contract}}{t}{Ipac}{\attr{CNTRL}=r^{(1)}}$ \par
-				 $\qquad + \cldsv{\attr{CTST}_{SecondLeg}^{Contract}}{t}{Ipac}{\attr{CNTRL}=r^{(2)}})$
+				 $\qquad + \cldsv{\attr{CTS}_{FirstLeg}^{Contract}}{t}{Ipac}{\attr{CNTRL}=r^{(1)}}$ \par
+				 $\qquad + \cldsv{\attr{CTS}_{SecondLeg}^{Contract}}{t}{Ipac}{\attr{CNTRL}=r^{(2)}})$
 		& {$\begin{aligned}
-				\svar{Ipac}{t^+} &= \cldsv{\attr{CTST}_{FirstLeg}^{Contract}}{t}{Ipac}{\attr{CNTRL}=r^{(1)}} \\
-						&+ \cldsv{\attr{CTST}_{SecondLeg}^{Contract}}{t}{Ipac}{\attr{CNTRL}=r^{(2)}} \\
+				\svar{Ipac}{t^+} &= \cldsv{\attr{CTS}_{FirstLeg}^{Contract}}{t}{Ipac}{\attr{CNTRL}=r^{(1)}} \\
+						&+ \cldsv{\attr{CTS}_{SecondLeg}^{Contract}}{t}{Ipac}{\attr{CNTRL}=r^{(2)}} \\
 				\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
 	TD & $X_{\attr{CUR}}^{\attr{CURS}}(t) (\attr{PTD}$ \par
-				 $\qquad + \cldsv{\attr{CTST}_{FirstLeg}^{Contract}}{t}{Ipac}{\attr{CNTRL}=r^{(1)}}$ \par
-				 $\qquad + \cldsv{\attr{CTST}_{SecondLeg}^{Contract}}{t}{Ipac}{\attr{CNTRL}=r^{(2)}})$
+				 $\qquad + \cldsv{\attr{CTS}_{FirstLeg}^{Contract}}{t}{Ipac}{\attr{CNTRL}=r^{(1)}}$ \par
+				 $\qquad + \cldsv{\attr{CTS}_{SecondLeg}^{Contract}}{t}{Ipac}{\attr{CNTRL}=r^{(2)}})$
 		& {$\begin{aligned}
 				\svar{Ipac}{t^+} &= 0.0 \\
 				\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
 	$z_\tau^m$ & $\fev{x_\tau^m}+\fev{y_\tau^m}$
 		& {$\begin{aligned}
-				\svar{Ipac}{t^+} &= \cldsv{\attr{CTST}_{FirstLeg}^{Contract}}{t}{Ipac}{\attr{CNTRL}=r^{(1)}} \\						&+ \cldsv{SecondLeg}{t}{Ipac}{\attr{CNTRL}=r^{(2)}} \\
+				\svar{Ipac}{t^+} &= \cldsv{\attr{CTS}_{FirstLeg}^{Contract}}{t}{Ipac}{\attr{CNTRL}=r^{(1)}} \\						&+ \cldsv{SecondLeg}{t}{Ipac}{\attr{CNTRL}=r^{(2)}} \\
 				\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
 	CE & \pof{CE}{PAM} & \stf{AD}{SWAPS} \\
@@ -2332,7 +2332,7 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 	TD & & Same as PAM \\
 	\hline
 	$k$ & $\{e_t^k\} = \{x_t^k+y_s^l\}$ \par
-	for all events $x_t^k\in\cldev{\attr{CTST}_{Underlying}^{Contract}}{t_0}{\attr{CNTRL}=RPA}$, $y_s^l\in\cldev{\attr{CTST}_{Underlying}^{Contract}}{t_0}{\attr{CNTRL}=RPA,\attr{RRLC}=\attr{RRLC},\attr{RRLF}=\attr{RRLF}}$ with $t=s \land k=l=IP$. That is, any two congruent events of the child-contract schedule, evaluated once without $\attr{RRLC},\attr{RRLF}$ defined and once with the attributes defined, which are of type IP are \textit{merged} into a new \textit{aggregate} event (see payoff and state transition function below). & \\
+	for all events $x_t^k\in\cldev{\attr{CTS}_{Underlying}^{Contract}}{t_0}{\attr{CNTRL}=RPA}$, $y_s^l\in\cldev{\attr{CTS}_{Underlying}^{Contract}}{t_0}{\attr{CNTRL}=RPA,\attr{RRLC}=\attr{RRLC},\attr{RRLF}=\attr{RRLF}}$ with $t=s \land k=l=IP$. That is, any two congruent events of the child-contract schedule, evaluated once without $\attr{RRLC},\attr{RRLF}$ defined and once with the attributes defined, which are of type IP are \textit{merged} into a new \textit{aggregate} event (see payoff and state transition function below). & \\
 	\hline
 	CE & & Same as PAM \\
 \end{schedule}
@@ -2340,12 +2340,12 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 
 % ---------------------- table: capfl states ----------------------
 \begin{states}{CAPFL}
-	$\svar{Md}{}$ & $\svar{Md}{t_0}=\max(\cldsv{\attr{CTST}_{Underlying}^{Contract}}{t_0}{Tmd}{\attr{CNTRL}=RPA},$ \par
-			$\qquad \cldsv{\attr{CTST}_{Underlying}^{Contract}}{t_0}{Tmd}{\attr{CNTRL}=RPA,\attr{RRLC}=\attr{RRLC},\attr{RRLF}=\attr{RRLF}})$ & \\
+	$\svar{Md}{}$ & $\svar{Md}{t_0}=\max(\cldsv{\attr{CTS}_{Underlying}^{Contract}}{t_0}{Tmd}{\attr{CNTRL}=RPA},$ \par
+			$\qquad \cldsv{\attr{CTS}_{Underlying}^{Contract}}{t_0}{Tmd}{\attr{CNTRL}=RPA,\attr{RRLC}=\attr{RRLC},\attr{RRLF}=\attr{RRLF}})$ & \\
 	\hline
   	$\svar{Ipac}{}$ & $\svar{Ipac}{t_0} = \sgn abs($ \par
-			$\qquad\cldsv{\attr{CTST}_{Underlying}^{Contract}}{t_0}{Ipac}{\attr{CNTRL}=r^{(1)}}$\par
-			$\qquad - \cldsv{\attr{CTST}_{Underlying}^{Contract}}{t_0}{Ipac}{\attr{CNTRL}=RPA,\attr{RRLC}=\attr{RRLC},\attr{RRLF}=\attr{RRLF}})$
+			$\qquad\cldsv{\attr{CTS}_{Underlying}^{Contract}}{t_0}{Ipac}{\attr{CNTRL}=r^{(1)}}$\par
+			$\qquad - \cldsv{\attr{CTS}_{Underlying}^{Contract}}{t_0}{Ipac}{\attr{CNTRL}=RPA,\attr{RRLC}=\attr{RRLC},\attr{RRLF}=\attr{RRLF}})$
 			& \\
 	\hline
   	$\svar{Prf}{}$ & & Same as PAM \\
@@ -2357,24 +2357,24 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 % ---------------------- table: capfl functions ----------------------
 \begin{functions}{CAPFL}
 	AD & \pof{AD}{PAM} & {$\begin{aligned}
-				\svar{Ipac}{t^+} &= \sgn  abs(\cldsv{\attr{CTST}_{Underlying}^{Contract}}{t}{Ipac}{\attr{CNTRL}=RPA} \\
-						&- \cldsv{\attr{CTST}_{Underlying}^{Contract}}{t}{Ipac}{\attr{CNTRL}=RPA, \\
+				\svar{Ipac}{t^+} &= \sgn  abs(\cldsv{\attr{CTS}_{Underlying}^{Contract}}{t}{Ipac}{\attr{CNTRL}=RPA} \\
+						&- \cldsv{\attr{CTS}_{Underlying}^{Contract}}{t}{Ipac}{\attr{CNTRL}=RPA, \\
 						&\qquad \attr{RRLC}=\attr{RRLC},\attr{RRLF}=\attr{RRLF}}) \\
 				\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
 	PRD & $X_{\attr{CUR}}^{\attr{CURS}}(t) ( (-1)\attr{PPRD} + \sgn  abs($ \par
-				 $\qquad \cldsv{\attr{CTST}_{Underlying}^{Contract}}{t}{Ipac}{\attr{CNTRL}=RPA} - $ \par
-				 $\qquad \cldsv{\attr{CTST}_{Underlying}^{Contract}}{t}{Ipac}{\attr{CNTRL}=RPA,$ \par
+				 $\qquad \cldsv{\attr{CTS}_{Underlying}^{Contract}}{t}{Ipac}{\attr{CNTRL}=RPA} - $ \par
+				 $\qquad \cldsv{\attr{CTS}_{Underlying}^{Contract}}{t}{Ipac}{\attr{CNTRL}=RPA,$ \par
 					$\qquad\qquad\attr{RRLC}=\attr{RRLC},\attr{RRLF}=\attr{RRLF}}))$
 		& {$\begin{aligned}
-				\svar{Ipac}{t^+} &= \sgn abs(\cldsv{\attr{CTST}_{Underlying}^{Contract}}{t}{Ipac}{\attr{CNTRL}=RPA} \\
-						&- \cldsv{\attr{CTST}_{Underlying}^{Contract}}{t}{Ipac}{\attr{CNTRL}=RPA, \\
+				\svar{Ipac}{t^+} &= \sgn abs(\cldsv{\attr{CTS}_{Underlying}^{Contract}}{t}{Ipac}{\attr{CNTRL}=RPA} \\
+						&- \cldsv{\attr{CTS}_{Underlying}^{Contract}}{t}{Ipac}{\attr{CNTRL}=RPA, \\
 						&\qquad \attr{RRLC}=\attr{RRLC},\attr{RRLF}=\attr{RRLF}}) \\
 				\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
 	TD & $X_{\attr{CUR}}^{\attr{CURS}}(t) (\attr{PTD}$ + \sgn abs( \par
-				 $\qquad \cldsv{\attr{CTST}_{Underlying}^{Contract}}{t}{Ipac}{\attr{CNTRL}=RPA} - $ \par
-				 $\qquad \cldsv{\attr{CTST}_{Underlying}^{Contract}}{t}{Ipac}{\attr{CNTRL}=RPA,$ \par
+				 $\qquad \cldsv{\attr{CTS}_{Underlying}^{Contract}}{t}{Ipac}{\attr{CNTRL}=RPA} - $ \par
+				 $\qquad \cldsv{\attr{CTS}_{Underlying}^{Contract}}{t}{Ipac}{\attr{CNTRL}=RPA,$ \par
 					$\qquad\qquad\attr{RRLC}=\attr{RRLC},\attr{RRLF}=\attr{RRLF}}))$
 		& {$\begin{aligned}
 				\svar{Ipac}{t^+} &= 0.0 \\
@@ -2410,7 +2410,7 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 				\undef & \text{else} \end{cases}$ & with\par
 		$e^{XD} = e\in\obs{ev}{i,\attr{XD}}{t_0} | \tev{e} \leq \svar{Md}{t_0}$\par
 		and\par
-		$i = \attr{CTST}_{CoveredContract}^{Contract}(i)$ \\
+		$i = \attr{CTS}_{CoveredContract}^{Contract}(i)$ \\
 	\hline
 	STD & $t^{STD} = \begin{cases} \undef & \text{if}\quad \attr{XD}=\undef \\
 					\attr{XD} + \attr{STD} & \text{else} \end{cases}$ &  \\
@@ -2451,7 +2451,7 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 								\max(S_t-\attr{OPS1},0) & \text{if}\quad \attr{OPTP}=\text{'C'} \\
 								\max(\attr{OPS1}-S_t,0) & \text{else if}\quad \attr{OPTP}=\text{'P'} \\
 								\max(S_t-\attr{OPS1},0) & \text{else} \\ \qquad + \max(\attr{OPS2}-S_t,0) &  \end{cases} \\
-				S_t &= \obs{rf}{\cldca{\attr{CTST}_{Underlying}^{Contract}}{MOC}}{t} \end{aligned}$} \\
+				S_t &= \obs{rf}{\cldca{\attr{CTS}_{Underlying}^{Contract}}{MOC}}{t} \end{aligned}$} \\
 	\hline
 	XD & 0.0 & {$\begin{aligned}
 					\svar{Xa}{t^+} &= \begin{cases}
@@ -2460,7 +2460,7 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 								\max(S_t-\attr{OPS1},0) & \text{else} \\ \qquad + \max(\attr{OPS2}-S_t,0) &  \end{cases} \\
 					\svar{Sd}{t^+} &= t \end{aligned}$}\par
 with\par
-			$S_t=\obs{rf}{\cldca{\attr{CTST}_{Underlying}^{Contract}}{MOC}}{t}$ \\
+			$S_t=\obs{rf}{\cldca{\attr{CTS}_{Underlying}^{Contract}}{MOC}}{t}$ \\
 	\hline
 	STD & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Xa}{t^-}$ & {$\begin{aligned}
 					\svar{Xa}{t^+} &= 0.0 \\
@@ -2522,13 +2522,13 @@ with\par
 			with\par
 			{$\begin{aligned}
 				x &= S_t-\attr{PFUT} \\
-				S_t &= \obs{rf}{\cldca{\attr{CTST}_{Underlying}^{Contract}}{MOC}}{t} \end{aligned}$} \\
+				S_t &= \obs{rf}{\cldca{\attr{CTS}_{Underlying}^{Contract}}{MOC}}{t} \end{aligned}$} \\
 	\hline
 	XD & 0.0 & {$\begin{aligned}
 					\svar{Xa}{t^+} &= S_t-\attr{PFUT} \\
 					\svar{Sd}{t^+} &= t \end{aligned}$}\par
 with\par
-			$S_t=\obs{rf}{\cldca{\attr{CTST}_{Underlying}^{Contract}}{MOC}}{t}$ \\
+			$S_t=\obs{rf}{\cldca{\attr{CTS}_{Underlying}^{Contract}}{MOC}}{t}$ \\
 	\hline
 	STD & \pof{STD}{OPTNS} & \stf{STD}{OPTNS} \\
 	\hline
@@ -2566,7 +2566,7 @@ with\par
 		$e^{CE} = e\in\obs{ev}{i,\attr{CE}}{t_0} | \svar{Prf}{\tev{e}^+}==\attr{CET}\wedge$\par
 				\quad\quad $ \tev{e} \leq \svar{Md}{t_0}$\par
 		and\par
-		$i = \attr{CTST}_{CoveredContract}^{Contract}(i)$  \\
+		$i = \attr{CTS}_{CoveredContract}^{Contract}(i)$  \\
 	\hline
 	STD & & Same as OPTNS  \\
 	\hline
@@ -2581,8 +2581,8 @@ with\par
 				& with\par
 					{$\begin{aligned}
 						\{e_t^k\} &= \{e_t^{k,1}\}\cup\{e_t^{k,2}\}\cup ...\cup\{e_t^{k,n}\} \\
-						\{e_t^{k,i}\} &= \cldev{\attr{CTST}_{CoveredContract}^{Contract}(i)}{t_0}\\
-						n &= \mid \attr{CTST}_{CoveredContract}^{Contract} \mid \end{aligned}$} \\
+						\{e_t^{k,i}\} &= \cldev{\attr{CTS}_{CoveredContract}^{Contract}(i)}{t_0}\\
+						n &= \mid \attr{CTS}_{CoveredContract}^{Contract} \mid \end{aligned}$} \\
 	\hline
 	$\svar{Nt}{}$ & $\svar{Nt}{t_0} = \begin{cases}
 							0.0 & \text{if}\quad t_0\geq\svar{Md}{t_0} \\
@@ -2593,7 +2593,7 @@ with\par
 					\quad + \cldsv{I(i)}{t_0}{Ipac}{x} & \\
 					\obs{rf}{\cldca{I(i)}{MOC}}{t_0} & \text{else} \end{cases}$ \par
 	where\par
-	$I=\attr{CTST}_{CoveredContract}^{Contract}$ \\
+	$I=\attr{CTS}_{CoveredContract}^{Contract}$ \\
 	\hline
 	$\svar{Feac}{}$ & $\svar{Feac}{t_0} = \begin{cases} 0.0 & \text{if} \quad \attr{FER}=\undef \\
 					\attr{FEAC} & \text{else if} \quad \attr{FEAC} \neq \undef \\
@@ -2639,7 +2639,7 @@ with\par
 					t^{FP-} &= \sup t \in \vec{t}^{FP}\mid t<t_0 \\
 					t^{FP+} &= \inf t \in \vec{t}^{FP}\mid t>t_0 \end{aligned}$}\par
 					where\par
-	$I=\attr{CTST}_{CoveredContract}^{Contract}$ \\
+	$I=\attr{CTS}_{CoveredContract}^{Contract}$ \\
 	\hline
 	FP & {$\begin{aligned} &X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\attr{FER} & \text{if} \quad \attr{FEB}=A \\
 				&X_{\attr{CUR}}^{\attr{CURS}}(t)\left(\svar{Feac}{t^-} + \svar{Nt}{t^-}\yfr{t^-}{t}\attr{FER}\right) & \text{else} \end{aligned}$}
@@ -2657,7 +2657,7 @@ with\par
 					t^{FP-} &= \sup t \in \vec{t}^{FP}\mid t<t_0 \\
 					t^{FP+} &= \inf t \in \vec{t}^{FP}\mid t>t_0 \end{aligned}$}\par
 					where\par
-	$I=\attr{CTST}_{CoveredContract}^{Contract}$ \\
+	$I=\attr{CTS}_{CoveredContract}^{Contract}$ \\
 	\hline
 	MD & 0.0 & {$\begin{aligned}
 					\svar{Nt}{t^+} &= 0.0 \\
@@ -2679,7 +2679,7 @@ with\par
 					t^{FP-} &= \sup t \in \vec{t}^{FP}\mid t<t_0 \\
 					t^{FP+} &= \inf t \in \vec{t}^{FP}\mid t>t_0 \end{aligned}$}\par
 					where\par
-	$I=\attr{CTST}_{CoveredContract}^{Contract}$ \\
+	$I=\attr{CTS}_{CoveredContract}^{Contract}$ \\
 	\hline
 	STD & $X_{\attr{CUR}}^{\attr{CURS}}(t)\left(\svar{Xa}{t^-}+\svar{Feac}{t^-}\right)$ & {$\begin{aligned}
 					\svar{Nt}{t^+} &= 0.0 \\
@@ -2715,8 +2715,8 @@ with\par
 				& with\par
 					{$\begin{aligned}
 						\{e_t^k\} &= \{e_t^{k,1}\}\cup\{e_t^{k,2}\}\cup ...\cup\{e_t^{k,n}\} \\
-						\{e_t^{k,i}\} &= \cldev{\attr{CTST}_{CoveredContract}^{Contract}(i)}{t_0} \\
-						n &= \mid \attr{CTST}_{CoveredContract}^{Contract} \mid \end{aligned}$} \\
+						\{e_t^{k,i}\} &= \cldev{\attr{CTS}_{CoveredContract}^{Contract}(i)}{t_0} \\
+						n &= \mid \attr{CTS}_{CoveredContract}^{Contract} \mid \end{aligned}$} \\
 	\hline
 	$\svar{Nt}{}$ & $\svar{Nt}{t_0} = \begin{cases}
 							0.0 & \text{if}\quad t_0\geq\svar{Md}{t_0} \\
@@ -2727,8 +2727,8 @@ with\par
 					\quad + \cldsv{I(i)}{t_0}{Ipac}{} & \\
 					\obs{rf}{\cldca{I(i)}{MOC}}{t_0} & \text{else} \end{cases} \\
 				v_j &= \obs{rf}{\cldca{J(j)}{MOC}}{t_0} \\
-				I &= \attr{CTST}_{CoveredContract}^{Contract} \\
-				J &= \attr{CTST}_{CoveringContract}^{Contract}\end{aligned}$} \\
+				I &= \attr{CTS}_{CoveredContract}^{Contract} \\
+				J &= \attr{CTS}_{CoveringContract}^{Contract}\end{aligned}$} \\
 	\hline
 	$\svar{Sd}{}$ & & Same as PAM \\
 \end{states}
@@ -2748,8 +2748,8 @@ with\par
 					\quad + \cldsv{I(i)}{t_0}{Ipac}{} & \\
 					\obs{rf}{\cldca{I(i)}{MOC}}{t_0} & \text{else} \end{cases} \\
 				v_j &= \obs{rf}{\cldca{J(j)}{MOC}}{t_0} \\
-				I &= \attr{CTST}_{CoveredContract}^{Contract} \\
-				J &= \attr{CTST}_{CoveringContract}^{Contract}\end{aligned}$} \\
+				I &= \attr{CTS}_{CoveredContract}^{Contract} \\
+				J &= \attr{CTS}_{CoveringContract}^{Contract}\end{aligned}$} \\
 	\hline
 	XD & \pof{XD}{OPTNS} & {$\begin{aligned}
 					\svar{Nt}{t^+} &= \min\left(\sum_{j=1}^{\mid J\mid} v_j, \attr{CECV}\sum_{i=1}^{\mid I\mid} n_i\right) \\
@@ -2761,8 +2761,8 @@ with\par
 					\quad + \cldsv{I(i)}{t_0}{Ipac}{} & \\
 					\obs{rf}{\cldca{I(i)}{MOC}}{t_0} & \text{else} \end{cases} \\
 				v_j &= \obs{rf}{\cldca{J(j)}{MOC}}{t_0} \\
-				I &= \attr{CTST}_{CoveredContract}^{Contract} \\
-				J &= \attr{CTST}_{CoveringContract}^{Contract}\end{aligned}$} \\
+				I &= \attr{CTS}_{CoveredContract}^{Contract} \\
+				J &= \attr{CTS}_{CoveringContract}^{Contract}\end{aligned}$} \\
 	\hline
 	STD & $X_{\attr{CUR}}^{\attr{CURS}}(t)\svar{Nt}{t^-}$ & {$\begin{aligned}
 					\svar{Nt}{t^+} &= 0.0 \\
@@ -2899,7 +2899,7 @@ with\par
 					\svar{Sd}{t^+} &= t \end{aligned}$} \par 
 					with $f^{RA}$ the contract Redemption Amount formula, 
 					e.g.\par
-					$f^{RA}=\frac{\obs{rf}{\attr{CTST}_{Underlying}^{MOC}}{t-\attr{FIP}}}{\obs{rf}{\attr{CTST}_{Underlying}^{MOC}}{\attr{ID}}}\attr{NPR}\svar{Mrf}{t}\svar{Adf}{t}$ \par
+					$f^{RA}=\frac{\obs{rf}{\attr{CTS}_{Underlying}^{MOC}}{t-\attr{FIP}}}{\obs{rf}{\attr{CTS}_{Underlying}^{MOC}}{\attr{ID}}}\attr{NPR}\svar{Mrf}{t}\svar{Adf}{t}$ \par
 					
 					 \\
 	\hline
