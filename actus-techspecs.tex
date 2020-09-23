@@ -1964,35 +1964,31 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 	TD & & Same as PAM \\
 	\hline
 	DDD & $t^{DDD} = \begin{cases}
-		\sdl{s}{\attr{DVCL}}{\tmax} & \text{if}\quad \attr{DVANX}\neq\undef \land \attr{DVCL}\neq\undef \\
+		\sdl{s}{\attr{DCL}}{\tmax} & \text{if}\quad \attr{DANX}\neq\undef \land \attr{DCL}\neq\undef \\
 		\obs{ev}{\attr{CID},\attr{DDD}}{t_0} & \text{else} \end{cases}$ 
 		& where\par
-		$s=\begin{cases} \attr{DVANX} & \text{if}\quad \attr{DVLP}=\undef \\
-				\attr{DVLP}+\attr{DVCL} & \text{else} \end{cases}$ \\
+		$s=\begin{cases} \attr{DANX} & \text{if}\quad \attr{DLDD}=\undef \\
+				\attr{DLDD}+\attr{DCL} & \text{else} \end{cases}$ \\
 	\hline
 	DED & $\vec{t}^{DED} = \begin{cases}
-					\undef & \text{if}\quad \attr{DVRP}=\undef \\
-					\vec{t}^{DDD}+\attr{DVRP} & \text{else} \end{cases}$ & \\
+					\undef & \text{if}\quad \attr{DRP}=\undef \\
+					\vec{t}^{DDD}+\attr{DRP} & \text{else} \end{cases}$ & \\
 	\hline
 	DPD & $\vec{t}^{DPD} = \begin{cases}
-					\undef & \text{if}\quad \attr{DVPP}=\undef \\
-					\vec{t}^{DDD}+\attr{DVPP} & \text{else} \end{cases}$ & \\
+					\undef & \text{if}\quad \attr{DPP}=\undef \\
+					\vec{t}^{DDD}+\attr{DPP} & \text{else} \end{cases}$ & \\
 	\hline
 	SDD & $t^{SDD} = \obs{ev}{\attr{CID},\attr{SDD}}{t_0}$ & \\
 	\hline
-	SED & $t^{SED} = \begin{cases}
-					\undef & \text{if}\quad \svar{Sed}{t_0}=\undef \\
-					\svar{Sed}{t_0} & \text{else} \end{cases}$ \\
+	SED & $t^{SED} = t^{SDD}+\attr{DRP}$ \\
 	\hline
-	SSD & $\vec{t}^{SSD} = \svar{Sed}{t_0}+\attr{STD}$ \\
+	SSD & $\vec{t}^{SSD} = t^{SDD}+\attr{SSP}$ \\
 	\hline
 	RDD & $t^{RDD} = \obs{ev}{\attr{CID},\attr{RDD}}{t_0}$ & \\
 	\hline
-	RED & $t^{RED} = \begin{cases}
-					\undef & \text{if}\quad \svar{Red}{t_0}=\undef \\
-					\svar{Red}{t_0} & \text{else} \end{cases}$ \\
+	RED & $t^{RED} = t^{RDD}+\attr{RRP}$ \\
 	\hline
-	RPD & $\vec{t}^{RPD} = \svar{Red}{t_0}+\attr{STD}$ \\
+	RPD & $\vec{t}^{RPD} = t^{RDD}+\attr{RSP}$ \\
 	\hline
 	CE & & Same as PAM \\
 \end{schedule}
@@ -2003,16 +1999,6 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
   	$\svar{Prf}{}$ & & Same as PAM \\
 	\hline
 	$\svar{Sd}{}$ & & Same as PAM \\
-	\hline
-	$\svar{Sed}{}$ & $\svar{Sed}{t_0} = 
-			\begin{cases}
-				\undef & \text{if}\quad \attr{SED}=\undef \\
-				\attr{SED} & \text{else} \end{cases}$ & \\
-	\hline
-	$\svar{Red}{}$ & $\svar{Sed}{t_0} = 
-			\begin{cases}
-				\undef & \text{if}\quad \attr{SED}=\undef \\
-				\attr{SED} & \text{else} \end{cases}$ & \\
 \end{states}
 
 
@@ -2022,61 +2008,52 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 	\hline
 	ID & $0.0$
 		& {$\begin{aligned}
-			\svar{Nt}{t^+} &= \attr{Nt} \\
+			\svar{Nt}{t^+} &= \attr{NT} \\
+			\svar{Qt}{t^+} &= \attr{QT} \\
 			\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
 	TD & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn \attr{PTD}$
 		& $\svar{Sd}{t^+}=t$ \\
 	\hline
 	DDD & $0.0$ & {$\begin{aligned}
-		\svar{Ded}{t^+} &= \obs{rf}{i}{t} \\
-		\svar{Dpd}{t^+} &= \obs{rf}{i}{t} + \attr{DVPP} \\
-		\svar{Dpa}{t^+} &= \obs{rf}{k}{t} \\
+		\svar{DLDD}{t^+} &= t \\
+		\svar{Dpa}{t^+} &= \obs{rf}{i}{t} \\
 		\svar{Sd}{t^+} &= t \end{aligned}$}\par
 		where\par
-		{$\begin{aligned}
-			i &= concat(\text{\attr{CID},"\_DED"}) \\
-			k &= concat(\text{\attr{CID},"\_DPD"}) \end{aligned}$}\\
+			$i = concat(\text{\attr{CID},"\_DPD"})$\\
 	\hline
 	DED & $0.0$ & {$\begin{aligned}
-		\svar{Ded}{t^+} &= \undef \\
 		\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
 	DPD & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Dpa}{t}$ & 
 			{$\begin{aligned}
-				\svar{Dpd}{t^+} &= \undef \\
-				\svar{Dpa}{t^+} &= \undef \\
+				\svar{Dpa}{t^+} &= 0.0 \\
 				\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
 	SDD & $0.0$ & {$\begin{aligned}
-		\svar{Sed}{t^+} &= \obs{rf}{i}{t} \\
-		\svar{Sra}{t^+} &= \obs{rf}{k}{t} \\
+		\svar{Sra}{t^+} &= \obs{rf}{i}{t} \\
 		\svar{Sd}{t^+} &= t \end{aligned}$}\par
 		where\par
-		{$\begin{aligned}
-			i &= concat(\text{\attr{CID},"\_SED"}) \\
-			k &= concat(\text{\attr{CID},"\_SRA"}) \end{aligned}$}\\
+			$i = concat(\text{\attr{CID},"\_SRA"})$\\
 	\hline
 	SSD & $0.0$ & {$\begin{aligned}
 		\svar{Qt}{t^+} &= \svar{Sra}{t^-}\times\svar{Qt}{t^-} \\
-		\svar{Sed}{t^+} &= \undef \\
-		\svar{Sra}{t^+} &= \undef \\
+		\svar{Sra}{t^+} &= 0.0 \\
 		\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
 	RDD & $0.0$ & {$\begin{aligned}
-		\svar{Red}{t^+} &= \obs{rf}{i}{t} \\
-		\svar{Rpd}{t^+} &= \obs{rf}{i}{t} + \attr{RPP} \\
+		\svar{Xa}{t^+} &= \obs{rf}{i}{t} \\
 		\svar{Sd}{t^+} &= t \end{aligned}$} \par
 		where\par
-		$i=concat(\text{\attr{CID},"\_RED"})$\\
+			$i = concat(\text{\attr{CID},"\_RXA"})$\\
 	\hline
 	RED & $0.0$ & {$\begin{aligned}
-		\svar{Red}{t^+} &= \undef \\
 		\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
-	RPD & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\attr{RPA}$ & 
+	RPD & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\attr{RPA}\svar{Xa}{t}$ & 
 			{$\begin{aligned}
-				\svar{Rpd}{t^+} &= \undef \\
+				\svar{Qt}{t^+} &= \svar{Qt}{t}-\svar{Xa}{t} \\
+				\svar{Xa}{t^+} &= 0.0 \\
 				\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
 	CE & \pof{CE}{PAM} & \stf{AD}{STK} \\
