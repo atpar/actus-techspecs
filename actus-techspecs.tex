@@ -2772,6 +2772,169 @@ with\par
 \end{functions}
 
 
+
+%%%%%%%%%%%%%%%%%%%% subsection: certf %%%%%%%%%%%%%%%%%%%%
+
+\subsection{CERTF: Certificate}\label{sec:certf}
+
+
+% ---------------------- table: certf schedule ----------------------
+\begin{schedule}{CERTF}
+	AD & & Same as PAM \\
+	\hline
+	ISS & $t^{ISS} = \attr{ISD}$ & \\
+	\hline
+	IED & $t^{IED} = \begin{cases}
+		\undef & \text{if}\quad \attr{IED}=\undef \\
+		\attr{IED} & \text{else} \end{cases}$ &  \\
+	\hline
+	COF & $t^{COF} = \begin{cases}
+		\undef & \text{if}\quad \attr{COANX}=\undef \wedge \attr{COCL}=\undef \\
+		\sdl{s}{\attr{COCL}}{T} & \text{else} \end{cases}$
+		& where\par
+		$s=\begin{cases} \attr{COANX} & \text{if}\quad \attr{COANX}\neq\undef \\
+				\attr{ISD}+\attr{COCL} & \text{else} \end{cases}$\par
+		and\par
+		$T=\begin{cases} \attr{MD} & \text{if}\quad \attr{MD}\neq\undef \\
+			\tmax & \text{else} \end{cases}$ \\
+	\hline
+	COP & $t^{COP} = \begin{cases} \undef & \text{if}\quad t^{COF} = \undef\\
+		t^{COF} + \attr{COPP} & \text{else} \end{cases}$ &  \\
+	\hline
+	REF & $t^{REF} = \begin{cases}
+		\undef & \text{if}\quad \attr{REANX}=\undef \wedge \attr{RECL}=\undef \\
+		\sdl{s}{\attr{RECL}}{T} & \text{else} \end{cases}$
+	   & where\par
+		$s=\begin{cases} \attr{REANX} & \text{if}\quad \attr{REANX}\neq\undef \\
+				\attr{ISD}+\attr{RECL} & \text{else} \end{cases}$
+		and\par
+		$T=\begin{cases} \attr{MD} & \text{if}\quad \attr{MD}\neq\undef \\
+			\tmax & \text{else} \end{cases}$ \\
+	\hline
+	EXO & $t^{EXO}=\obs{ev}{\attr{CID},\attr{EXO}}{t}$ & \\
+	\hline
+	EXE & $t^{EXE} = \begin{cases} \undef & \text{if}\quad t^{REF} = \undef \\
+				t^{REF}\setminus\attr{MD} + \attr{EXP} & \text{else if}\quad \attr{MD}\neq\undef \\
+				t^{REF} + \attr{EXP} & \text{else} \end{cases}$ &  \\
+	\hline
+	REP & $t^{REP} = \begin{cases} \undef & \text{if}\quad t^{REF} = \undef\\
+		t^{REF} + \attr{REPP} & \text{else} \end{cases}$ &  \\
+	\hline
+	TD & $\obs{ev}{i,\attr{TD}}{t_0}$ &  \\
+	\hline 
+	MD & $t^{MD} = \begin{cases}
+		\undef & \text{if}\quad \attr{MD}=\undef \\
+		\attr{MD} & \text{else} \end{cases}$ &  \\
+	\hline
+	CE & & Same as PAM \\
+\end{schedule}
+
+
+% ---------------------- table: certf states ----------------------
+\begin{states}{CERTF}
+	$\svar{Qt}{}$ & $\svar{Qt}{t_0} = \attr{QT}$ & \\
+	\hline	
+	$\svar{Xo}{}$ & $\svar{Xo}{t_0} = \begin{cases}
+		\attr{XO} & \text{if}\quad \attr{XO}\neq\undef \\
+		\attr{0} & \text{else} \end{cases}$ & \\
+	\hline	
+	$\svar{Xq}{}$ & $\svar{Xq}{t_0} = \begin{cases}
+		\attr{XQ} & \text{if}\quad \attr{XQ}\neq\undef \\
+		\attr{0} & \text{else} \end{cases}$ & \\
+	\hline
+	$\svar{Xa}{}$ & $\svar{Xa}{t_0} = \begin{cases}
+		\attr{XA} & \text{if}\quad \attr{XA}\neq\undef \\
+		\attr{0} & \text{else} \end{cases}$ & \\
+	\hline
+	$\svar{Mrf}{}$ & $\svar{Mrf}{t_0} = \begin{cases}
+		\attr{MRF} & \text{if}\quad \attr{MRF}\neq\undef \\
+		\attr{1.0} & \text{else} \end{cases}$ & \\
+	\hline	
+	$\svar{Adf}{}$ & $\svar{Adf}{t_0} = \begin{cases}
+		\attr{ADF} & \text{if}\quad \attr{ADF}\neq\undef \\
+		\attr{1.0} & \text{else} \end{cases}$ & \\
+	\hline	
+	$\svar{Lcd}{}$ & $\svar{Lcd}{t_0} = \begin{cases}
+		\attr{LCD} & \text{if}\quad \attr{LCD}\neq\undef \\
+		\attr{ID} & \text{else} \end{cases}$ & \\
+	\hline	
+	$\svar{Caf}{}$ & $\svar{Caf}{t_0} = \begin{cases}
+		\attr{CAF} & \text{if}\quad \attr{CAF}\neq\undef \\
+		\attr{0.0} & \text{else} \end{cases}$ & \\
+	\hline
+	$\svar{Prf}{}$ & & Same as PAM \\
+	\hline
+	$\svar{Sd}{}$ & & Same as PAM \\
+\end{states}
+
+
+% ---------------------- table: certf functions ----------------------
+\begin{functions}{CERTF}
+	AD & \pof{AD}{PAM} & $\svar{Sd}{t^+} = t$ \\
+	\hline
+	ISS & 0.0 & {$\begin{aligned}
+		\svar{Qt}{t^+} &= \attr{QT}  \\
+		\svar{Sd}{t^+} &= t \end{aligned}$} \\
+	\hline
+	IED & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Qt}{t}\attr{IPR}$ & $\svar{Sd}{t^+} = t$ \\
+	\hline
+	COF & 0.0 & {$\begin{aligned}
+					\svar{Caf}{t^+} &= f^{COF}()  \\
+					\svar{Lcd}{t^+} &= t  \\
+					\svar{Sd}{t^+} &= t \end{aligned}$} \par 
+					with Coupon Amount formula\par
+					$f^{COF} = \begin{cases}
+						\yfr{\svar{Lcd}{t}}{t}\attr{NPR}\times\attr{CORT} & \text{if}\quad \attr{COTP}='FIX' \\
+						\obs{rf}{\attr{CID}}{t}\yfr{\svar{Lcd}{t}}{t}\attr{NPR}\times\attr{CORT} & \text{if}\quad \attr{COTP}='FCN' \\
+						\obs{rf}{\attr{concat(CID,'-',COFX)}}{t} & \text{else} \end{cases}$
+					 \\
+	\hline
+	COP & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Qt}{t}\svar{Caf}{t}$ &  {$\begin{aligned}
+		\svar{Caf}{t^+} &= 0.0 \\
+		\svar{Sd}{t^+} &= t \end{aligned}$} \\
+	\hline
+	REF & 0.0 & {$\begin{aligned}
+					\svar{Xa}{t^+} &= f^{REF}()  \\
+					\svar{Sd}{t^+} &= t \end{aligned}$} \par 
+					with $f^{REF}$ the contract Redemption Amount formula, 
+					e.g.\par
+					$f^{REF}=\frac{\obs{rf}{\attr{CTS}_{Underlying}^{MOC}}{t-\attr{FIP}}}{\obs{rf}{\attr{CTS}_{Underlying}^{MOC}}{\attr{ID}}}\attr{NPR}\svar{Mrf}{t}\svar{Adf}{t}$ \par
+					
+					 \\
+	\hline
+	EXO & 0.0 & {$\begin{aligned}
+		\svar{Xo}{t^+} &= min(\svar{Qt}{t},\svar{Xo}{t}+ev^{QT})  \\
+		\svar{Sd}{t^+} &= t \end{aligned}$} \par
+		with $ev^{QT}$ the exercised quantity as per XO event. \\
+	\hline
+	EXE & 0.0 & {$\begin{aligned}
+		\svar{Xq}{t^+} &= \svar{Xo}{t}  \\
+		\svar{Xo}{t^+} &= 0  \\
+		\svar{Sd}{t^+} &= t \end{aligned}$} \\
+	\hline
+	REP & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Xq}{t}\svar{Xa}{t}$ & {$\begin{aligned}
+		\svar{Qt}{t^+} &= \svar{Qt}{t}-\svar{Xq}{t} \\
+		\svar{Xq}{t^+} &= 0.0 \\		
+		\svar{Xa}{t^+} &= 0.0 \\
+		\svar{Prf}{t^+} &=\begin{cases} \svar{Prf}{t} & \text{if } \svar{Md}{t} = \undef \wedge \svar{Td}{t} = \undef \\
+			\text{matured} & \text{else if } \svar{Md}{t} \neq \undef \\
+			\text{terminated} & \text{else} \end{cases}	\\		
+		\svar{Sd}{t^+} &= t \end{aligned}$}	\\
+	\hline
+	TD & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Qt}{t}\svar{Xa}{t}$ & {$\begin{aligned}
+		\svar{Qt}{t^+} &= 0  \\
+		\svar{Td}{t^+} &= t \\
+		\svar{Sd}{t^+} &= t \end{aligned}$} \\
+	\hline
+	MD & 0.0 & {$\begin{aligned}
+		\svar{Xq}{t^+} &= \svar{Qt}{t}  \\
+		\svar{Md}{t^+} &= t \\
+		\svar{Sd}{t^+} &= t \end{aligned}$} \\
+	\hline
+	CE & \pof{CE}{PAM} & \stf{AD}{OPTNS} \\
+\end{functions}
+
+
 %%%%%%%%%%%%%%%%%%%% section: bibliography %%%%%%%%%%%%%%%%%%%%
 
 \bibliography{bibliography}
