@@ -1957,20 +1957,34 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 \begin{schedule}{STK}
 	AD & & Same as PAM \\
 	\hline
-	PRD & & Same as PAM \\
+	ISS & $t^{ISS} = \attr{ISD}$  & \\
 	\hline
 	TD & & Same as PAM \\
 	\hline
-	DV$^{(fix)}$ & $t^{DV^{(fix)}} = \begin{cases}
-					\undef & \text{if}\quad \attr{DVNP}=\undef \\
-					\attr{DVANX} & \text{else} \end{cases}$ & \\
-	\hline
-	DV & $\vec{t}^{DV} = \begin{cases}
-					\undef & \text{if}\quad \attr{DVANX}=\undef \land \attr{DVCL}=\undef \\
-					\sdl{s}{\attr{DVCL}}{\tmax} & \text{else} \end{cases}$
+	DIF & $t^{DIF} = \begin{cases}
+		\sdl{s}{\attr{DICL}}{\tmax} & \text{if}\quad \attr{DIANX}\neq\undef \land \attr{DICL}\neq\undef \\
+		\obs{ev}{\attr{CID},\attr{DIF}}{t_0} & \text{else} \end{cases}$ 
 		& where\par
-		$s=\begin{cases} \attr{DVANX} & \text{if}\quad \attr{DVNP}=\undef \\
-				\attr{DVANX}+\attr{DVCL} & \text{else} \end{cases}$ \\
+		$s=\begin{cases} \attr{DIANX} & \text{if}\quad \attr{LDIFD}=\undef \\
+				\attr{LDIFD}+\attr{DICL} & \text{else} \end{cases}$ \\
+	\hline
+	DIX & $\vec{t}^{DIX} = \begin{cases}
+					\undef & \text{if}\quad \attr{DIRP}=\undef \\
+					\vec{t}^{DIX}+\attr{DIRP} & \text{else} \end{cases}$ & \\
+	\hline
+	DIP & $\vec{t}^{DIP} = \begin{cases}
+					\undef & \text{if}\quad \attr{DIPP}=\undef \\
+					\vec{t}^{DIF}+\attr{DIPP} & \text{else} \end{cases}$ & \\
+	\hline
+	SPF & $t^{SPF} = \obs{ev}{\attr{CID},\attr{SPF}}{t_0}$ & \\
+	\hline
+	SPS & $\vec{t}^{SPS} = t^{SPF}+\attr{SPSP}$ \\
+	\hline
+	REF & $t^{REF} = \obs{ev}{\attr{CID},\attr{REF}}{t_0}$ & \\
+	\hline
+	REX & $t^{REX} = t^{REF}+\attr{REXP}$ \\
+	\hline
+	REP & $\vec{t}^{REP} = t^{REF}+\attr{RESP}$ \\
 	\hline
 	CE & & Same as PAM \\
 \end{schedule}
@@ -1988,17 +2002,55 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 \begin{functions}{STK}
 	AD & \pof{AD}{PAM} & $\svar{Sd}{t^+}=t$ \\
 	\hline
-	PRD & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn (-1) \attr{PPRD}$
-		& $\svar{Sd}{t^+}=t$ \\
+	ISS & $0.0$
+		& {$\begin{aligned}
+			\svar{Nt}{t^+} &= \attr{NT} \\
+			\svar{Qt}{t^+} &= \attr{QT} \\
+			\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
 	TD & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn \attr{PTD}$
 		& $\svar{Sd}{t^+}=t$ \\
 	\hline
-	DV$^{(fix)}$ & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\attr{DVNP}$ & $\svar{Sd}{t^+}=t$ \\
+	DIF & $0.0$ & {$\begin{aligned}
+		\svar{LDIFD}{t^+} &= t \\
+		\svar{Dipa}{t^+} &= \obs{rf}{i}{t} \\
+		\svar{Sd}{t^+} &= t \end{aligned}$}\par
+		where\par
+			$i = concat(\text{\attr{CID},"\_DIP"})$\\
 	\hline
-	DV & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn \obs{rf}{concat(\text{\attr{CID},"-DV"})}{t}$ \par
-	with $concat(x,y,z)$ indicates the string concatenation function
-		& $\svar{Sd}{t^+}=t$ \\
+	DIX & $0.0$ & {$\begin{aligned}
+		\svar{Sd}{t^+} &= t \end{aligned}$} \\
+	\hline
+	DIP & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Dipa}{t}$ & 
+			{$\begin{aligned}
+				\svar{Dipa}{t^+} &= 0.0 \\
+				\svar{Sd}{t^+} &= t \end{aligned}$} \\
+	\hline
+	SPF & $0.0$ & {$\begin{aligned}
+		\svar{Spra}{t^+} &= \obs{rf}{i}{t} \\
+		\svar{Lspfd}{t^+} &= t \end{aligned}$}\par
+		where\par
+			$i = concat(\text{\attr{CID},"\_SRA"})$\\
+	\hline
+	SPS & $0.0$ & {$\begin{aligned}
+		\svar{Qt}{t^+} &= \svar{Spra}{t^-}\times\svar{Qt}{t^-} \\
+		\svar{Spra}{t^+} &= 0.0 \\
+		\svar{Sd}{t^+} &= t \end{aligned}$} \\
+	\hline
+	REF & $0.0$ & {$\begin{aligned}
+		\svar{Exa}{t^+} &= \obs{rf}{i}{t} \\
+		\svar{Sd}{t^+} &= t \end{aligned}$} \par
+		where\par
+			$i = concat(\text{\attr{CID},"\_REXA"})$\\
+	\hline
+	REX & $0.0$ & {$\begin{aligned}
+		\svar{Sd}{t^+} &= t \end{aligned}$} \\
+	\hline
+	REP & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\attr{REPA}\svar{Exa}{t}$ & 
+			{$\begin{aligned}
+				\svar{Qt}{t^+} &= \svar{Qt}{t}-\svar{Exa}{t} \\
+				\svar{Exa}{t^+} &= 0.0 \\
+				\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
 	CE & \pof{CE}{PAM} & \stf{AD}{STK} \\
 \end{functions}
