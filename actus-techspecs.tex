@@ -2814,8 +2814,8 @@ with\par
 	EXO & $t^{EXO}=\obs{ev}{\attr{CID},\attr{EXO}}{t}$ & \\
 	\hline
 	EXE & $t^{EXE} = \begin{cases} \undef & \text{if}\quad t^{REF} = \undef \\
-				t^{REF}\setminus\attr{MD} + \attr{EXP} & \text{else if}\quad \attr{MD}\neq\undef \\
-				t^{REF} + \attr{EXP} & \text{else} \end{cases}$ &  \\
+				t^{REF}\setminus\attr{MD} + \attr{REXP} & \text{else if}\quad \attr{MD}\neq\undef \\
+				t^{REF} + \attr{REXP} & \text{else} \end{cases}$ &  \\
 	\hline
 	REP & $t^{REP} = \begin{cases} \undef & \text{if}\quad t^{REF} = \undef\\
 		t^{REF} + \attr{REPP} & \text{else} \end{cases}$ &  \\
@@ -2854,12 +2854,12 @@ with\par
 		\attr{ADF} & \text{if}\quad \attr{ADF}\neq\undef \\
 		\attr{1.0} & \text{else} \end{cases}$ & \\
 	\hline	
-	$\svar{Lcd}{}$ & $\svar{Lcd}{t_0} = \begin{cases}
+	$\svar{Lcfd}{}$ & $\svar{Lcfd}{t_0} = \begin{cases}
 		\attr{LCD} & \text{if}\quad \attr{LCD}\neq\undef \\
 		\attr{ID} & \text{else} \end{cases}$ & \\
 	\hline	
-	$\svar{Caf}{}$ & $\svar{Caf}{t_0} = \begin{cases}
-		\attr{CAF} & \text{if}\quad \attr{CAF}\neq\undef \\
+	$\svar{Coaf}{}$ & $\svar{Coaf}{t_0} = \begin{cases}
+		\attr{COAF} & \text{if}\quad \attr{COAF}\neq\undef \\
 		\attr{0.0} & \text{else} \end{cases}$ & \\
 	\hline
 	$\svar{Prf}{}$ & & Same as PAM \\
@@ -2879,22 +2879,22 @@ with\par
 	IED & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Qt}{t}\attr{IPR}$ & $\svar{Sd}{t^+} = t$ \\
 	\hline
 	COF & 0.0 & {$\begin{aligned}
-					\svar{Caf}{t^+} &= f^{COF}()  \\
-					\svar{Lcd}{t^+} &= t  \\
+					\svar{Coaf}{t^+} &= f^{COF}()  \\
+					\svar{Lcofd}{t^+} &= t  \\
 					\svar{Sd}{t^+} &= t \end{aligned}$} \par 
 					with Coupon Amount formula\par
 					$f^{COF} = \begin{cases}
-						\yfr{\svar{Lcd}{t}}{t}\attr{NPR}\times\attr{CORT} & \text{if}\quad \attr{COTP}='FIX' \\
-						\obs{rf}{\attr{CID}}{t}\yfr{\svar{Lcd}{t}}{t}\attr{NPR}\times\attr{CORT} & \text{if}\quad \attr{COTP}='FCN' \\
+						\yfr{\svar{Lcofd}{t}}{t}\attr{NPR}\times\attr{CORT} & \text{if}\quad \attr{COTP}='FIX' \\
+						\obs{rf}{\attr{CID}}{t}\yfr{\svar{Lcofd}{t}}{t}\attr{NPR}\times\attr{CORT} & \text{if}\quad \attr{COTP}='FCN' \\
 						\obs{rf}{\attr{concat(CID,'-',COFX)}}{t} & \text{else} \end{cases}$
 					 \\
 	\hline
-	COP & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Qt}{t}\svar{Caf}{t}$ &  {$\begin{aligned}
-		\svar{Caf}{t^+} &= 0.0 \\
+	COP & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Qt}{t}\svar{Coaf}{t}$ &  {$\begin{aligned}
+		\svar{Coaf}{t^+} &= 0.0 \\
 		\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
 	REF & 0.0 & {$\begin{aligned}
-					\svar{Xa}{t^+} &= f^{REF}()  \\
+					\svar{Exa}{t^+} &= f^{REF}()  \\
 					\svar{Sd}{t^+} &= t \end{aligned}$} \par 
 					with $f^{REF}$ the contract Redemption Amount formula, 
 					e.g.\par
@@ -2903,31 +2903,31 @@ with\par
 					 \\
 	\hline
 	EXO & 0.0 & {$\begin{aligned}
-		\svar{Xo}{t^+} &= min(\svar{Qt}{t},\svar{Xo}{t}+ev^{QT})  \\
+		\svar{Exo}{t^+} &= min(\svar{Qt}{t},\svar{Exo}{t}+ev^{QT})  \\
 		\svar{Sd}{t^+} &= t \end{aligned}$} \par
-		with $ev^{QT}$ the exercised quantity as per XO event. \\
+		with $ev^{QT}$ the exercised quantity as per EXO event. \\
 	\hline
 	EXE & 0.0 & {$\begin{aligned}
-		\svar{Xq}{t^+} &= \svar{Xo}{t}  \\
-		\svar{Xo}{t^+} &= 0  \\
+		\svar{Exq}{t^+} &= \svar{Exo}{t}  \\
+		\svar{Exo}{t^+} &= 0  \\
 		\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
-	REP & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Xq}{t}\svar{Xa}{t}$ & {$\begin{aligned}
-		\svar{Qt}{t^+} &= \svar{Qt}{t}-\svar{Xq}{t} \\
-		\svar{Xq}{t^+} &= 0.0 \\		
-		\svar{Xa}{t^+} &= 0.0 \\
+	REP & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Exq}{t}\svar{Exa}{t}$ & {$\begin{aligned}
+		\svar{Qt}{t^+} &= \svar{Qt}{t}-\svar{Exq}{t} \\
+		\svar{Exq}{t^+} &= 0.0 \\		
+		\svar{Exa}{t^+} &= 0.0 \\
 		\svar{Prf}{t^+} &=\begin{cases} \svar{Prf}{t} & \text{if } \svar{Md}{t} = \undef \wedge \svar{Td}{t} = \undef \\
 			\text{matured} & \text{else if } \svar{Md}{t} \neq \undef \\
 			\text{terminated} & \text{else} \end{cases}	\\		
 		\svar{Sd}{t^+} &= t \end{aligned}$}	\\
 	\hline
-	TD & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Qt}{t}\svar{Xa}{t}$ & {$\begin{aligned}
+	TD & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Qt}{t}\svar{Exa}{t}$ & {$\begin{aligned}
 		\svar{Qt}{t^+} &= 0  \\
 		\svar{Td}{t^+} &= t \\
 		\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
 	MD & 0.0 & {$\begin{aligned}
-		\svar{Xq}{t^+} &= \svar{Qt}{t}  \\
+		\svar{Exq}{t^+} &= \svar{Qt}{t}  \\
 		\svar{Md}{t^+} &= t \\
 		\svar{Sd}{t^+} &= t \end{aligned}$} \\
 	\hline
