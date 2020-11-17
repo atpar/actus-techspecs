@@ -2008,9 +2008,9 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 	\hline
 	REF & $t^{REF} = \obs{ev}{\attr{CID},\attr{REF}}{t_0}$ & \\
 	\hline
-	REX & $t^{REX} = t^{REF}+\attr{REXP}$ \\
+	REX & $t^{REX} = t^{REF}+\attr{RERP}$ \\
 	\hline
-	REP & $\vec{t}^{REP} = t^{REF}+\attr{RESP}$ \\
+	REP & $\vec{t}^{REP} = t^{REF}+\attr{REPP}$ \\
 	\hline
 	CE & & Same as PAM \\
 \end{schedule}
@@ -2891,9 +2891,9 @@ with\par
 	\hline
 	EXO & $t^{EXO}=\obs{ev}{\attr{CID},\attr{EXO}}{t}$ & \\
 	\hline
-	EXE & $t^{EXE} = \begin{cases} \undef & \text{if}\quad t^{REF} = \undef \\
-				t^{REF}\setminus\attr{MD} + \attr{REXP} & \text{else if}\quad \attr{MD}\neq\undef \\
-				t^{REF} + \attr{REXP} & \text{else} \end{cases}$ &  \\
+	REX & $t^{REX} = \begin{cases} \undef & \text{if}\quad t^{REF} = \undef \\
+				t^{REF}\setminus\attr{MD} + \attr{RERP} & \text{else if}\quad \attr{MD}\neq\undef \\
+				t^{REF} + \attr{RERP} & \text{else} \end{cases}$ &  \\
 	\hline
 	REP & $t^{REP} = \begin{cases} \undef & \text{if}\quad t^{REF} = \undef\\
 		t^{REF} + \attr{REPP} & \text{else} \end{cases}$ &  \\
@@ -2985,7 +2985,7 @@ with\par
 		\svar{Sd}{t^+} &= t \end{aligned}$} \par
 		with $ev^{QT}$ the exercised quantity as per EXO event. \\
 	\hline
-	EXE & 0.0 & {$\begin{aligned}
+	REX & 0.0 & {$\begin{aligned}
 		\svar{Exq}{t^+} &= \svar{Exo}{t}  \\
 		\svar{Exo}{t^+} &= 0  \\
 		\svar{Sd}{t^+} &= t \end{aligned}$} \\
