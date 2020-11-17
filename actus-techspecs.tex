@@ -775,7 +775,10 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 \begin{schedule}{PAM}
 	AD & $\vec{t}^{AD} = \left(t_0,t_1,...,t_n\right)$ & With $t_i,i=1,2,...$ a custom input \\
 	\hline
-	IED & $t^{IED} = \attr{IED}$ & \\
+	ISS & $t^{ISS} = \attr{ISS}$ & \\
+	\hline
+	IED & $t^{IED} = \begin{cases} \undef & \text{if} \quad \attr{IED}=\undef \\
+		\attr{IED} & \text{else} \end{cases}$ & \\
 	\hline
 	MD & $t^{MD} = \svar{Md}{t_0}$ & \\
 	\hline
@@ -842,10 +845,10 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 \begin{states}{PAM}
 	$\svar{Md}{}$ & $\svar{Md}{t_0} = \attr{MD}$ & \\
 	\hline
-  	$\svar{Nt}{}$ & $\svar{Nt}{t_0} = \begin{cases} 0.0 & \text{if} \quad \attr{IED} > t_0 \\
+  	$\svar{Nt}{}$ & $\svar{Nt}{t_0} = \begin{cases} 0.0 & \text{if} \quad \attr{ISS} > t_0 \\
 							\sgn\times\attr{NT} & \text{else} \end{cases}$ & \\
 	\hline
-	$\svar{Ipnr}{}$ & $\svar{Ipnr}{t_0} = \begin{cases} 0.0 & \text{if} \quad \attr{IED} > t_0 \\
+	$\svar{Ipnr}{}$ & $\svar{Ipnr}{t_0} = \begin{cases} 0.0 & \text{if} \quad \attr{ISS} > t_0 \\
 							\attr{IPNR} & \text{else} \end{cases}$ & \\
   	\hline
   	$\svar{Ipac}{}$ & $\svar{Ipac}{t_0} = \begin{cases} 0.0 & \text{if} \quad \attr{IPNR}=\undef \\
@@ -879,7 +882,7 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 				\svar{Sd}{t^+} &= t
 			\end{aligned}$} \\
 	\hline
-	IED & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn(-1)(\attr{NT}+\attr{PDIED})$
+	ISS & 0.0
 		& {$\begin{aligned}
 			\svar{Nt}{t^+} &=\sgn\attr{NT} \\
 			\svar{Ipnr}{t^+} &= \begin{cases} 0.0 & \text{if} \quad \attr{IPNR}=\undef \\
@@ -887,6 +890,13 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 			\svar{Ipac}{t^+} &= \begin{cases} \attr{IPAC} & \text{if} \quad \attr{IPAC} \neq \undef \\
 							y\svar{Nt}{t^+}\svar{Ipnr}{t^+} & \text{if} \quad \attr{IPANX} \neq \undef \land \attr{IPANX}<t \\
 							0.0 & \text{else} \end{cases} \\
+			\svar{Sd}{t^+} &= t \end{aligned}$}\par
+		with\par
+		$y=\yfr{\attr{IPANX}}{t}$ \\
+	\hline	
+	IED & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn(-1)(\attr{NT}+\attr{PDIED})$
+		& {$\begin{aligned}
+			\svar{Ipac}{t^+} &= \svar{Ipac}{t^-} + \yfr{\svar{Sd}{t^-}}{t}\svar{Ipnr}{t^-}\svar{Nt}{t^-} \\
 			\svar{Sd}{t^+} &= t \end{aligned}$}\par
 		with\par
 		$y=\yfr{\attr{IPANX}}{t}$ \\
@@ -1035,6 +1045,8 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 \begin{schedule}{LAM}
 	AD & & Same as PAM \\
 	\hline
+	ISS & & Same as PAM \\
+	\hline
 	IED & & Same as PAM \\
 	\hline
 	PR & $t^{PR} = \sdll{s}{\attr{PRCL}}{T^{MD}}{F}$
@@ -1108,7 +1120,7 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 					t^- & \text{else} \end{cases}$\par
 		and where $t^- = \sup t \in \vec{t}^{PR}\mid t<t_0$ \\
 	\hline
-	$\svar{Ipcb}{}$ & $\svar{Ipcb}{t_0}= \begin{cases} 0.0 & \text{if}\quad t_0<\attr{IED} \\
+	$\svar{Ipcb}{}$ & $\svar{Ipcb}{t_0}= \begin{cases} 0.0 & \text{if}\quad t_0<\attr{ISS} \\
 					\sgn\attr{NT} & \text{else if}\quad \attr{IPCB}=\text{'NT'} \\
 					\sgn\attr{IPCBA} & \text{else} \end{cases}$ & \\
 \end{states}
@@ -1118,7 +1130,7 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 \begin{functions}{LAM}
 	AD & \pof{AD}{PAM} & \stf{AD}{PAM} \\
 	\hline
-	IED & \pof{IED}{PAM}
+	ISS & 0.0
 		& {$\begin{aligned}
 			\svar{Nt}{t^+} &=\sgn\attr{NT} \\
 			\svar{Ipnr}{t^+} &= \attr{IPNR} \\
@@ -1128,6 +1140,8 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 			\svar{Sd}{t^+} &= t \\
 			\svar{Ipcb}{t^+} &= \begin{cases} \sgn\attr{NT} & \text{if}\quad \attr{IPCB}=\text{'NT'} \\
 							\sgn\attr{IPCBA} & \text{else} \end{cases} \end{aligned}$} \\
+	\hline	
+	IED & \pof{IED}{PAM} & \stf{IED}{PAM} \\
 	\hline
 	PR & $X_{\attr{CUR}}^{\attr{CURS}}(t)\sgn\svar{Nsc}{t^-}\svar{Prnxt}{t^-}$
 		& {$\begin{aligned}
@@ -1280,6 +1294,8 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 \begin{schedule}{LAX}
 	AD & & Same as PAM \\
 	\hline
+	ISS & & Same as PAM \\
+	\hline
 	IED & & Same as PAM \\
 	\hline
 	PR & $\vec{t}^{PR} = \begin{cases} \{ t_1, t_2, ..., t_i, ... \} & \text{if}\quad \attr{ARPRCL}=\undef \\
@@ -1391,6 +1407,8 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 \begin{functions}{LAX}
 	AD & \pof{AD}{PAM} & \stf{AD}{PAM} \\
 	\hline
+	ISS & \pof{ISS}{PAM} & \stf{ISS}{PAM} \\
+	\hline
 	IED & \pof{IED}{PAM} & \stf{IED}{LAM} \\
 	\hline
 	PR & \pof{PR}{LAM} & \stf{PR}{LAM} \\
@@ -1483,6 +1501,8 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 \begin{schedule}{NAM}
 	AD & & Same as PAM \\
 	\hline
+	ISS & & Same as PAM \\
+	\hline
 	IED & & Same as PAM \\
 	\hline
 	PR & & Same as LAM \\
@@ -1563,6 +1583,8 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 \begin{functions}{NAM}
 	AD & \pof{AD}{PAM} & \stf{AD}{PAM} \\
 	\hline
+	ISS & \pof{ISS}{PAM} & \stf{ISS}{PAM} \\
+	\hline
 	IED & \pof{IED}{PAM} & \stf{IED}{LAM} \\
 	\hline
 	PR & $X_{\attr{CUR}}^{\attr{CURS}}(t)\svar{Nsc}{t^-}(\svar{Prnxt}{t^-}-\svar{Ipac}{t^-}-$\par $\qquad\qquad \yfr{\svar{Sd}{t^-}}{t}\svar{Ipnr}{t^-}\svar{Ipcb}{t^-})$
@@ -1628,6 +1650,8 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 \begin{schedule}{ANN}
 	AD & & Same as PAM \\
 	\hline
+	ISS & & Same as PAM \\
+	\hline
 	IED & & Same as PAM \\
 	\hline
 	PR & & Same as LAM \\
@@ -1690,6 +1714,8 @@ For brevity we will omit the $x$ and $a$ function arguments wherever this does n
 % ---------------------- table: ann functions ----------------------
 \begin{functions}{ANN}
 	AD & \pof{AD}{PAM} & \stf{AD}{PAM} \\
+	\hline
+	ISS & \pof{ISS}{PAM} & \stf{ISS}{PAM} \\
 	\hline
 	IED & \pof{IED}{PAM} & \stf{IED}{LAM} \\
 	\hline
